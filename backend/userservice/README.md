@@ -10,3 +10,7 @@ Tech Stack:
 **Framework**: Spring Boot
 **Database**: PostgreSQL
 **Authentication**: OAuth2 with JWT
+
+Run instructions Docker:
+docker build -t netflix-clone/userservice .
+docker run -p 8080:8080 netflix-clone/userservice
