@@ -11,6 +11,9 @@ Tech Stack:
 **Database**: PostgreSQL
 **Authentication**: OAuth2 with JWT
 
-Run instructions Docker:
+**Run instructions Docker:**
+**Create the artefact**:
+mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+**build and run the image**
 docker build -t netflix-clone/userservice .
 docker run -p 8080:8080 netflix-clone/userservice

@@ -4,12 +4,18 @@ FROM eclipse-temurin:22.0.2_9-jre-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-ARG JAR_FILE=target/userservice-0.0.1-SNAPSHOT.jar
+ARG DEPENDENCY=target/dependency
+COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY ${DEPENDENCY}/META-INF /app/META-INF
+COPY ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.netflixclone.userservice.UserserviceApplication"]
 
-WORKDIR /app
+#ARG JAR_FILE=target/userservice-0.0.1-SNAPSHOT.jar
+#
+#WORKDIR /app
+#
+#COPY ${JAR_FILE} /app/user-api.jar
 
-COPY ${JAR_FILE} /app/user-api.jar
+#EXPOSE 8080
 
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "user-api.jar"]
+#ENTRYPOINT ["java", "-jar", "user-api.jar"]
