@@ -1,7 +1,3 @@
-```bash
-minikube addons enable registry
-```
-
 ## Setup your shell to use Minikube's Docker Daemon (rather than local Docker Desktop)
 
 ```bash
