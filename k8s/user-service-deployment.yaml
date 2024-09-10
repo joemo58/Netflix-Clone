@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+# deployment manages a set of pods to run a (stateless) app workload.
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  # defines replicaSet. In this case, a single replicated pod
+  replicas: 1
+  # defines how the ReplicaSet finds which Pods to manage
+  selector:
+    # in this case, match the label defined in the pod template below
+    matchLabels:
+      app: user-service
+  # This is the pod template - changing the containers defined here will trigger a rollout
+  template:
+    metadata:
+      labels:
+        # Pod's label
+        app: user-service
+    spec:
+      # List of container(s) that will be run in this pod
+      containers:
+        - name: user-service
+          image: netflix-clone/userservice:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+
+---
+# services enable you to expose groups of pods over a network - service is asigned a cluster-internal IP address
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  # matches the label in the pod template above
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 80            # Port that will be exposed to ingress
+      targetPort: 3000    # Port that container (pod) is listening on
+  type: ClusterIP         # Expose the service inside the cluster only. Allocates a cluster-internal IP address`

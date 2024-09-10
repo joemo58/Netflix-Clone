@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller('api/stream')
+@Controller('api/streaming')
 export class StreamController {
   @Get('hit')
   getHit(): { count: number } {

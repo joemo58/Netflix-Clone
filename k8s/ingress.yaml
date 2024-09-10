@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+# Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster
+kind: Ingress
+metadata:
+  name: microservices-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  # These routing rules route traffic to the correct service based on the path
+  rules:
+    - host: netflix-clone.local
+      http:
+        paths:
+          - path: /api/users
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service  
+                port:
+                  number: 80
+          - path: /api/content
+            pathType: Prefix
+            backend:
+              service:
+                name: content-service
+                port:
+                  number: 80
+          - path: /api/streaming
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-service
+                port:
+                  number: 80
