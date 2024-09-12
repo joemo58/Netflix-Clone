@@ -24,7 +24,7 @@ spec:
           image: netflix-clone/userservice:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
+            - containerPort: 8080
 
 ---
 # services enable you to expose groups of pods over a network - service is asigned a cluster-internal IP address
@@ -33,11 +33,12 @@ kind: Service
 metadata:
   name: user-service
 spec:
+  # Exposes the service on a cluster-internal IP
+  type: ClusterIP        
   # matches the label in the pod template above
   selector:
     app: user-service
   ports:
     - protocol: TCP
-      port: 80            # Port that will be exposed to ingress
-      targetPort: 3000    # Port that container (pod) is listening on
-  type: ClusterIP         # Expose the service inside the cluster only. Allocates a cluster-internal IP address`
+      port: 80            # Port that the service listens to within the cluster
+      targetPort: 8080    # Port that container (pod) is listening on

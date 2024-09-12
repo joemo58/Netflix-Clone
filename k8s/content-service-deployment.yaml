@@ -17,7 +17,7 @@ spec:
           image: netflix-clone/contentservice:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
+            - containerPort: 8000
 
 ---
 apiVersion: v1
@@ -25,10 +25,10 @@ kind: Service
 metadata:
   name: content-service
 spec:
+  type: ClusterIP
   selector:
     app: content-service
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: ClusterIP
+      port: 80        # Port that the service listens to within the cluster
+      targetPort: 8000  # Port that container (pod) is listening on
