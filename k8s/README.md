@@ -7,7 +7,8 @@ This guide helps you set up and deploy the Netflix Clone microservices locally u
 - Install Docker on your system.
 - Install [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) for creating Kubernetes clusters.
 
-## Setup
+## Onboarding the services
+THESE STEPS ONLY NEED TO BE RUN ONCE, DURING INITIAL SETUP/ONBOARDING
 
 ### Install Kind
 
@@ -17,10 +18,16 @@ Install Kind on Mac using Brew:
 brew install kind
 ```
 
-### Create the Kind Cluster
-You only need to do this once per session (once the cluster is up and running, you can redeploy using the shell script deploy-local.sh. See section [Deploying the backend to the cluster](#Deploying-the-backend-to-the-cluster)).
+### Map the base URL to localhost in hosts file
+```bash
+sudo sh -c "echo "127.0.0.1       netflix-clone.local" >> /etc/hosts"
+```
 
-cd into the K8s/ directory
+## Deploying the cluster/Ingress
+### Create the Kind Cluster
+You only need to do this once per session (once the cluster is up and running, you can redeploy using the shell script deploy-local.sh. See section [Deploying the backend to the cluster](#Deploying-the-backend-to-the-cluster).
+
+change directory into the K8s/ directory. Then run:
 
 ```bash
 kind create cluster --config kind-cluster-config.yaml
@@ -51,3 +58,8 @@ Run the script to build the latest images and deploy to the kind cluster
 ```bash
 ./deploy-local.sh
 ```
+
+### The endpoints should now be accessible from your browser:
+- http://netflix-clone.local/api/streaming/hit
+- http://netflix-clone.local/api/content/hit
+- http://netflix-clone.local/api/users/hit
