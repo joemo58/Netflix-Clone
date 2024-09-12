@@ -63,3 +63,8 @@ Run the script to build the latest images and deploy to the kind cluster
 - http://netflix-clone.local/api/streaming/hit
 - http://netflix-clone.local/api/content/hit
 - http://netflix-clone.local/api/users/hit
+
+
+---
+## Debugging the logs
+kubectl logs -f <pod_name>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -34,46 +34,46 @@ export default function ServicesDashboard() {
     streamingService: 0,
   });
 
-  // useEffect(() => {
+  useEffect(() => {
   // populate the hit counts on initial page load use async calls to get all 3 hit counts at once
-  //   Promise.all([
-  //     fetch(services.userService.endpoints.hit),
-  //     fetch(services.contentService.endpoints.hit),
-  //     fetch(services.streamingService.endpoints.hit),
-  //   ])
-  //     .then((responses) => {
-  //       return Promise.all(responses.map((response) => response.json()));
-  //     })
-  //     .then((data) => {
-  //       setHitCounts({
-  //         userService: data[0].count,
-  //         contentService: data[1].count,
-  //         streamingService: data[2].count,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       // Handle error
-  //     });
-  // }, []);
+    Promise.all([
+      fetch(services.userService.endpoints.hit),
+      fetch(services.contentService.endpoints.hit),
+      fetch(services.streamingService.endpoints.hit),
+    ])
+      .then((responses) => {
+        return Promise.all(responses.map((response) => response.json()));
+      })
+      .then((data) => {
+        setHitCounts({
+          userService: data[0].count,
+          contentService: data[1].count,
+          streamingService: data[2].count,
+        });
+      })
+      .catch((error) => {
+        // Handle error
+      });
+  }, []);
 
 
   const handleHit = async (service: keyof typeof hitCounts) => {
-    // fetch(services[service].endpoints.hit, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       setHitCounts((prev) => ({ ...prev, [service]: prev[service] + 1 }));
-    //     } else {
-    //       throw new Error("Failed to hit service");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     // Handle error
-    //   });
+    fetch(services[service].endpoints.hit, {
+      // method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setHitCounts((prev) => ({ ...prev, [service]: prev[service] + 1 }));
+        } else {
+          throw new Error("Failed to hit service");
+        }
+      })
+      .catch((error) => {
+        // Handle error
+      });
     
     setHitCounts((prev) => ({ ...prev, [service]: prev[service] + 1 }));
   };
@@ -98,7 +98,7 @@ export default function ServicesDashboard() {
     //     // Handle error
     //   });
 
-    // TODO: remove after backend is connected
+    // TODO: remove after backend queues are connected
     setSubscriptionType(subscription);
   };
 
