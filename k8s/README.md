@@ -1,24 +1,39 @@
+# Netflix Clone Local Deployment
+
+This guide helps you set up and deploy the Netflix Clone microservices locally using Kind (Kubernetes in Docker) and NGINX Ingress.
+
+## Prerequisites
+
+- Install Docker on your system.
+- Install [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) for creating Kubernetes clusters.
+
 ## Setup
 
-Install Kind (Kubernetes in Docker) as per the [website](https://kind.sigs.k8s.io/docs/user/quick-start/) (I prefer to use the Brew install on Mac):
+### Install Kind
+
+Install Kind on Mac using Brew:
 
 ```bash
 brew install kind
 ```
 
-Create the cluster
+### Create the Kind Cluster
+You only need to do this once per session (once the cluster is up and running, you can redeploy using the shell script deploy-local.sh. See section [Deploying the backend to the cluster](#Deploying-the-backend-to-the-cluster)).
+
+cd into the K8s/ directory
 
 ```bash
 kind create cluster --config kind-cluster-config.yaml
 ```
 
-Install NGINX ingress controller
+### Install NGINX Ingress Controller (enables the cluster to accept incoming traffic)
+Install the NGINX ingress controller:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 ```
 
-Wait until the nginx controller is up and running (this may take a little while)
+Wait until the NGINX controller is up and running:
 
 ```bash
 kubectl wait --namespace ingress-nginx \
@@ -27,62 +42,12 @@ kubectl wait --namespace ingress-nginx \
   --timeout=90s
 ```
 
-Once this has completed you can confirm the controller is running:
-
+## Deploying the backend to the cluster
+Ensure the deploy-local.sh script has execute permissions
 ```bash
-kubectl get pods -n ingress-nginx
+chmod +x deploy-local.sh
 ```
-
-The output should be similar to:
-
+Run the script to build the latest images and deploy to the kind cluster
 ```bash
-NAME                                        READY   STATUS      RESTARTS    AGE
-ingress-nginx-admission-create-g9g49        0/1     Completed   0          11m
-ingress-nginx-admission-patch-rqp78         0/1     Completed   1          11m
-ingress-nginx-controller-59b45fb494-26npt   1/1     Running     0          11m
+./deploy-local.sh
 ```
-
----
-
-# Commands to deploy to MiniKube
-
-## Make sure all images are built
-
-```bash
-docker build -t netflix-clone/streamingservice:latest ../backend/streamingservice
-docker build -t netflix-clone/contentservice:latest ../backend/contentservice
-docker build -t netflix-clone/userservice:latest ../backend/userservice
-```
-
----
-
-## Load the Docker images into Kind
-
-```bash
-kind load docker-image netflix-clone/streamingservice netflix-clone/contentservice netflix-clone/userservice
-```
-
-## Check the images have been loaded into the node correctly
-```bash 
-docker exec -it kind-control-plane crictl images
-```
-
----
-
-## Apply the Deployments and Services:
-
-```bash
-kubectl apply -f user-service-deployment.yaml
-kubectl apply -f content-service-deployment.yaml
-kubectl apply -f streaming-service-deployment.yaml
-```
-
----
-
-## Apply the Ingress:
-
-```bash
-kubectl apply -f ingress.yaml
-```
-
----
