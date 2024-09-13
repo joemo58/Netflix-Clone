@@ -19,6 +19,7 @@ brew install kind
 ```
 
 ### Map the base URL to localhost in hosts file
+This will let you access the site using the netflix-clone.local URL, rather than localhost
 ```bash
 sudo sh -c "echo "127.0.0.1       netflix-clone.local" >> /etc/hosts"
 ```
